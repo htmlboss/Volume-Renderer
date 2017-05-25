@@ -1,7 +1,7 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef OGLWIDGET_H
+#define OGLWIDGET_H
 
-#include <QOpenGLWindow>
+#include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
@@ -14,11 +14,13 @@
 // Qt doesn't have an array wrapper.
 #include <array>
 
-class Window : public QOpenGLWindow, protected QOpenGLFunctions {
+class QExposeEvent;
+
+class OGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
 	Q_OBJECT
 public:
-	Window() Q_DECL_NOEXCEPT;
-	~Window();
+	OGLWidget() Q_DECL_NOEXCEPT;
+	~OGLWidget();
 
 	void initializeGL() Q_DECL_OVERRIDE;
 	void resizeGL(int width, int height) Q_DECL_OVERRIDE;
@@ -88,4 +90,4 @@ constexpr Vertex cube[] = {
 #undef VERTEX_FTL
 #undef VERTEX_FTR
 
-#endif // WINDOW_H
+#endif // OGLWIDGET_H

@@ -1,27 +1,24 @@
-#include <QGuiApplication>
+#include <QApplication>
+#include <QMainWindow>
 
-#include "window.h"
-
-#include <iostream>
+#include "mainwindow.h"
+#include "oglwidget.h"
 
 int main(int argc, char *argv[]) {
-	QGuiApplication a(argc, argv);
+	QApplication a(argc, argv);
 
 	QSurfaceFormat fmt;
 	fmt.setRenderableType(QSurfaceFormat::OpenGL);
 	fmt.setProfile(QSurfaceFormat::CoreProfile);
 	fmt.setVersion(4, 5);
 
-	Window window;
-	window.setFormat(fmt);
-	window.resize(1280, 720);
+	OGLWidget* widget = new OGLWidget;
+	widget->setFormat(fmt);
 
-	try {
-		window.show();
-		a.exec();
-	} catch(const std::runtime_error& e) {
-		std::cerr << "Error: " << e.what();
-	}
+	MainWindow window;
+	window.setCentralWidget(widget);
+	window.resize(QSize(800, 600));
+	window.show();
 
-	return 0;
+	return a.exec();
 }

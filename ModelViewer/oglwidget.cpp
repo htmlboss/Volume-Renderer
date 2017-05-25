@@ -1,20 +1,20 @@
-#include "window.h"
+#include "oglwidget.h"
 
 #include <QDebug>
 
 /***********************************************************************************/
-Window::Window() Q_DECL_NOEXCEPT {
+OGLWidget::OGLWidget() Q_DECL_NOEXCEPT {
 	m_transform.translate(0.0f, 0.0f, -5.0f);
 }
 
 /***********************************************************************************/
-Window::~Window() {
+OGLWidget::~OGLWidget() {
 	makeCurrent();
 	teardownGL();
 }
 
 /***********************************************************************************/
-void Window::initializeGL() {
+void OGLWidget::initializeGL() {
 	initializeOpenGLFunctions();
 	connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
 	printContextInfo();
@@ -53,7 +53,7 @@ void Window::initializeGL() {
 }
 
 /***********************************************************************************/
-void Window::resizeGL(int width, int height) {
+void OGLWidget::resizeGL(int width, int height) {
 	qDebug() << "Window resized to: " << width << " " << height;
 
 	m_projection.setToIdentity();
@@ -61,7 +61,7 @@ void Window::resizeGL(int width, int height) {
 }
 
 /***********************************************************************************/
-void Window::paintGL() {
+void OGLWidget::paintGL() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_program->bind();
@@ -74,21 +74,21 @@ void Window::paintGL() {
 }
 
 /***********************************************************************************/
-void Window::teardownGL() {
+void OGLWidget::teardownGL() {
 	m_vbo.destroy();
 	m_vao.destroy();
 }
 
 /***********************************************************************************/
-void Window::update() {
+void OGLWidget::update() {
 	m_transform.rotate(1.0f, QVector3D(0.4f, 0.3f, 0.3f));
 
 	// Force update
-	QOpenGLWindow::update();
+	QOpenGLWidget::update();
 }
 
 /***********************************************************************************/
-void Window::printContextInfo() {
+void OGLWidget::printContextInfo() {
 	QString glType, glVersion, glslVersion, glProfile;
 
 	// Get Version Information
