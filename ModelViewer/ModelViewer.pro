@@ -31,7 +31,8 @@ HEADERS += \
     mainwindow.h
 
 RESOURCES += \
-    resources.qrc
+    resources.qrc \
+    qdarkstyle/style.qrc
 
 DISTFILES += \
     shaders/basic.vert \
