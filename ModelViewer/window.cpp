@@ -1,9 +1,10 @@
 #include "window.h"
 
-#include <QDebug>QOpenGLShaderProgram
+#include <QDebug>
 
 /***********************************************************************************/
 Window::Window() Q_DECL_NOEXCEPT {
+	m_transform.translate(0.0f, 0.0f, -5.0f);
 }
 
 /***********************************************************************************/
@@ -15,22 +16,28 @@ Window::~Window() {
 /***********************************************************************************/
 void Window::initializeGL() {
 	initializeOpenGLFunctions();
+	connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
 	printContextInfo();
 
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_FRAMEBUFFER_SRGB);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	m_program = new QOpenGLShaderProgram();
+	m_program.reset(new QOpenGLShaderProgram());
 	m_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/basic.vert");
 	m_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/basic.frag");
 	if (!m_program->link()) {
-		qDebug() << m_program->log();
+		throw std::runtime_error(m_program->log().toStdString());
 	}
 	m_program->bind();
+
+	u_modelToWorld = m_program->uniformLocation("modelToWorld");
+	u_worldToView = m_program->uniformLocation("worldToView");
 
 	m_vbo.create();
 	m_vbo.bind();
 	m_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	m_vbo.allocate(m_triangle.data(), sizeof(m_triangle));
+	m_vbo.allocate(cube, sizeof(cube));
 
 	m_vao.create();
 	m_vao.bind();
@@ -48,6 +55,9 @@ void Window::initializeGL() {
 /***********************************************************************************/
 void Window::resizeGL(int width, int height) {
 	qDebug() << "Window resized to: " << width << " " << height;
+
+	m_projection.setToIdentity();
+	m_projection.perspective(45.0f, width / float(height), 0.0f, 1000.0f);
 }
 
 /***********************************************************************************/
@@ -55,9 +65,11 @@ void Window::paintGL() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_program->bind();
+	m_program->setUniformValue(u_worldToView, m_projection);
 	{
 		m_vao.bind();
-		glDrawArrays(GL_TRIANGLES, 0, m_triangle.size());
+		m_program->setUniformValue(u_modelToWorld, m_transform.toMatrix());
+		glDrawArrays(GL_TRIANGLES, 0, sizeof(cube) / sizeof(cube[0]));
 	}
 }
 
@@ -65,16 +77,24 @@ void Window::paintGL() {
 void Window::teardownGL() {
 	m_vbo.destroy();
 	m_vao.destroy();
-	delete m_program;
+}
+
+/***********************************************************************************/
+void Window::update() {
+	m_transform.rotate(1.0f, QVector3D(0.4f, 0.3f, 0.3f));
+
+	// Force update
+	QOpenGLWindow::update();
 }
 
 /***********************************************************************************/
 void Window::printContextInfo() {
-	QString glType, glVersion, glProfile;
+	QString glType, glVersion, glslVersion, glProfile;
 
 	// Get Version Information
 	glType = (context()->isOpenGLES()) ? "OpenGL ES" : "OpenGL";
 	glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+	glslVersion = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	// Get Profile Information
 #define CASE(c) case QSurfaceFormat::c: glProfile = #c; break
@@ -86,5 +106,5 @@ void Window::printContextInfo() {
 #undef CASE
 
 	 // qPrintable() will print our QString w/o quotes around it.
-	 qDebug() << qPrintable(glType) << qPrintable(glVersion) << "(" << qPrintable(glProfile) << ")";
+	 qDebug() << qPrintable(glType) << qPrintable(glVersion) << " " << qPrintable(glslVersion) << " (" << qPrintable(glProfile) << ")";
 }
