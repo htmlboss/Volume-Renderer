@@ -11,6 +11,9 @@ TEMPLATE = app
 SOURCES += main.cpp \
     transform3d.cpp \
     oglwidget.cpp \
+    mainwindow.cpp \
+    input.cpp \
+    camera.cpp \
     mainwindow.cpp
 
 # The following define makes your compiler emit warnings if you use
@@ -28,6 +31,9 @@ HEADERS += \
     vertex.h \
     transform3d.h \
     oglwidget.h \
+    mainwindow.h \
+    input.h \
+    camera.h \
     mainwindow.h
 
 RESOURCES += \
@@ -37,3 +43,6 @@ RESOURCES += \
 DISTFILES += \
     shaders/basic.vert \
     shaders/basic.frag
+
+FORMS += \
+    mainwindow.ui

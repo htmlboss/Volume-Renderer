@@ -1,10 +1,20 @@
 #include "oglwidget.h"
 
+#include "input.h"
+
 #include <QDebug>
+#include <QMouseEvent>
 
 /***********************************************************************************/
-OGLWidget::OGLWidget() Q_DECL_NOEXCEPT {
+OGLWidget::OGLWidget(QWidget* parent) {
 	m_transform.translate(0.0f, 0.0f, -5.0f);
+
+	QSurfaceFormat fmt;
+	fmt.setRenderableType(QSurfaceFormat::OpenGL);
+	fmt.setProfile(QSurfaceFormat::CoreProfile);
+	fmt.setVersion(4, 5);
+	fmt.setSamples(8);
+	setFormat(fmt);
 }
 
 /***********************************************************************************/
@@ -19,6 +29,7 @@ void OGLWidget::initializeGL() {
 	connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
 	printContextInfo();
 
+	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_FRAMEBUFFER_SRGB);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -27,12 +38,13 @@ void OGLWidget::initializeGL() {
 	m_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/basic.vert");
 	m_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/basic.frag");
 	if (!m_program->link()) {
-		throw std::runtime_error(m_program->log().toStdString());
+		qDebug() << m_program->log();
 	}
 	m_program->bind();
 
 	u_modelToWorld = m_program->uniformLocation("modelToWorld");
-	u_worldToView = m_program->uniformLocation("worldToView");
+	u_worldToCamera = m_program->uniformLocation("worldToCamera");
+	u_cameraToView = m_program->uniformLocation("cameraToView");
 
 	m_vbo.create();
 	m_vbo.bind();
@@ -54,8 +66,6 @@ void OGLWidget::initializeGL() {
 
 /***********************************************************************************/
 void OGLWidget::resizeGL(int width, int height) {
-	qDebug() << "Window resized to: " << width << " " << height;
-
 	m_projection.setToIdentity();
 	m_projection.perspective(45.0f, width / float(height), 0.0f, 1000.0f);
 }
@@ -65,7 +75,9 @@ void OGLWidget::paintGL() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_program->bind();
-	m_program->setUniformValue(u_worldToView, m_projection);
+	m_program->setUniformValue(u_worldToCamera, m_camera.toMatrix());
+	m_program->setUniformValue(u_cameraToView, m_projection);
+
 	{
 		m_vao.bind();
 		m_program->setUniformValue(u_modelToWorld, m_transform.toMatrix());
@@ -81,10 +93,27 @@ void OGLWidget::teardownGL() {
 
 /***********************************************************************************/
 void OGLWidget::update() {
-	m_transform.rotate(1.0f, QVector3D(0.4f, 0.3f, 0.3f));
+	Input::update();
+
+	if (Input::buttonPressed(Qt::RightButton)) {
+		constexpr auto rotSpeed = 0.25f;
+
+		m_transform.rotate(-rotSpeed * Input::mouseDelta().x(), m_camera.Up);
+		m_transform.rotate(-rotSpeed * Input::mouseDelta().y(), m_camera.right());
+	}
 
 	// Force update
 	QOpenGLWidget::update();
+}
+
+/***********************************************************************************/
+void OGLWidget::mousePressEvent(QMouseEvent* event) {
+	Input::registerMousePress(event->button());
+}
+
+/***********************************************************************************/
+void OGLWidget::mouseReleaseEvent(QMouseEvent* event) {
+	Input::registerMouseRelease(event->button());
 }
 
 /***********************************************************************************/

@@ -1,13 +1,13 @@
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 
-#include <QStatusBar>
-#include <QStyleFactory>
 #include <QFile>
-#include <QTextStream>
 #include <QDebug>
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
-	setWindowTitle("Model Viewer");
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+	ui->setupUi(this);
+
+	setWindowTitle("Viewer");
 
 	QFile f(":qdarkstyle/style.qss");
 	if (!f.exists()) {
@@ -20,4 +20,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 	}
 
 	statusBar()->showMessage("Ready");
+}
+
+MainWindow::~MainWindow() {
+	delete ui;
 }

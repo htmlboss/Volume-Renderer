@@ -9,17 +9,12 @@
 #include <QScopedPointer>
 
 #include "vertex.h"
-#include "transform3d.h"
-
-// Qt doesn't have an array wrapper.
-#include <array>
-
-class QExposeEvent;
+#include "camera.h"
 
 class OGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
 	Q_OBJECT
 public:
-	OGLWidget() Q_DECL_NOEXCEPT;
+	OGLWidget(QWidget* parent = nullptr);
 	~OGLWidget();
 
 	void initializeGL() Q_DECL_OVERRIDE;
@@ -32,11 +27,16 @@ public:
 protected slots:
 	void update();
 
+protected:
+	void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+	void mouseReleaseEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+
 private:
 	// Print OpenGL context info
 	void printContextInfo();
 
-	GLuint u_modelToWorld, u_worldToView;
+	Camera m_camera;
+	GLuint u_modelToWorld, u_worldToCamera, u_cameraToView;
 
 	QOpenGLVertexArrayObject m_vao;
 	QOpenGLBuffer m_vbo;

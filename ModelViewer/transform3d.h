@@ -43,11 +43,19 @@ public:
 	auto getRotation() const noexcept { return m_rotation; }
 	QMatrix4x4 toMatrix() noexcept;
 
+	auto forward() const { return m_rotation.rotatedVector(m_forward); }
+	auto right() const { return m_rotation.rotatedVector(m_right); }
+	auto up() const { return m_rotation.rotatedVector(m_up); }
+
 private:
 	bool m_dirty;
 	QVector3D m_translation, m_scale;
 	QQuaternion m_rotation;
 	QMatrix4x4 m_world;
+
+	const QVector3D m_forward = QVector3D(0.0f, 0.0f, -1.0f);
+	const QVector3D m_up = QVector3D(0.0f, 1.0f, 0.0f);
+	const QVector3D m_right = QVector3D(1.0f, 0.0f, 0.0f);
 };
 
 Q_DECLARE_TYPEINFO(Transform3D, Q_MOVABLE_TYPE);
