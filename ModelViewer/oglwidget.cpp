@@ -67,7 +67,7 @@ void OGLWidget::initializeGL() {
 /***********************************************************************************/
 void OGLWidget::resizeGL(int width, int height) {
 	m_projection.setToIdentity();
-	m_projection.perspective(45.0f, width / float(height), 0.0f, 1000.0f);
+	m_projection.perspective(45.0f, width / float(height), 1.0f, 100.0f);
 }
 
 /***********************************************************************************/
@@ -98,8 +98,8 @@ void OGLWidget::update() {
 	if (Input::buttonPressed(Qt::RightButton)) {
 		constexpr auto rotSpeed = 0.25f;
 
-		m_transform.rotate(-rotSpeed * Input::mouseDelta().x(), m_camera.Up);
-		m_transform.rotate(-rotSpeed * Input::mouseDelta().y(), m_camera.right());
+		m_transform.rotate(rotSpeed * Input::mouseDelta().x(), m_camera.Up);
+		m_transform.rotate(rotSpeed * Input::mouseDelta().y(), m_camera.right());
 	}
 
 	// Force update
