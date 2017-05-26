@@ -43,7 +43,7 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout"/>
+    <addaction name="actionAboutQt"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -57,13 +57,13 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>250</width>
+     <width>325</width>
      <height>58</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
-     <width>250</width>
+     <width>325</width>
      <height>524287</height>
     </size>
    </property>
@@ -86,11 +86,91 @@
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents"/>
+   <widget class="QWidget" name="dockWidgetContents">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>311</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Snapshot</string>
+     </property>
+     <widget class="QLineEdit" name="screenshotFolder">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>291</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string>Snaphot folder</string>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="selectFolderPushButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>70</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Select Folder</string>
+      </property>
+      <property name="default">
+       <bool>true</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="snapshotPushButton">
+      <property name="geometry">
+       <rect>
+        <x>189</x>
+        <y>70</y>
+        <width>111</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Render Snapshot</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
   </widget>
-  <action name="actionAbout">
+  <action name="actionAboutQt">
    <property name="text">
-    <string>About</string>
+    <string>About Qt</string>
    </property>
    <property name="font">
     <font>
