@@ -21,7 +21,13 @@ private slots:
 
 	void on_snapshotPushButton_clicked();
 
-	void on_screenshotFolder_textChanged(const QString &arg1);
+	void on_screenshotFolder_textChanged(const QString& arg1);
+
+	void on_invertAxisCheckBox_clicked();
+
+	void on_rotSensitivirySpinBox_editingFinished();
+
+	void on_rotSensitivirySpinBox_valueChanged(double arg1);
 
 private:
 	Ui::MainWindow* ui;

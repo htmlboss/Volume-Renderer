@@ -6,7 +6,7 @@
 #include <QMouseEvent>
 
 /***********************************************************************************/
-OGLWidget::OGLWidget(QWidget* parent) {
+OGLWidget::OGLWidget(QWidget* parent) : m_axisInversion(1), m_rotationSpeed(0.25f) {
 	m_transform.translate(0.0f, 0.0f, -5.0f);
 
 	QSurfaceFormat fmt;
@@ -72,7 +72,7 @@ void OGLWidget::resizeGL(int width, int height) {
 
 /***********************************************************************************/
 void OGLWidget::paintGL() {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	m_program->bind();
 	m_program->setUniformValue(u_worldToCamera, m_camera.toMatrix());
@@ -92,14 +92,22 @@ void OGLWidget::teardownGL() {
 }
 
 /***********************************************************************************/
+void OGLWidget::SetInvertedAxis(const bool val) {
+	m_axisInversion = val ? -1 : 1;
+}
+
+/***********************************************************************************/
+void OGLWidget::SetMouseSensitivity(const double val) {
+	m_rotationSpeed = val;
+}
+
+/***********************************************************************************/
 void OGLWidget::update() {
 	Input::update();
 
 	if (Input::buttonPressed(Qt::RightButton)) {
-		constexpr auto rotSpeed = 0.25f;
-
-		m_transform.rotate(rotSpeed * Input::mouseDelta().x(), m_camera.Up);
-		m_transform.rotate(rotSpeed * Input::mouseDelta().y(), m_camera.right());
+		m_transform.rotate(m_axisInversion * m_rotationSpeed * Input::mouseDelta().x(), m_camera.Up);
+		m_transform.rotate(m_axisInversion * m_rotationSpeed * Input::mouseDelta().y(), m_camera.right());
 	}
 
 	// Force update

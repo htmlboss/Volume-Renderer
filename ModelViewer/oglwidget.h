@@ -24,6 +24,9 @@ public:
 	// Clean up OpenGL
 	void teardownGL();
 
+	void SetInvertedAxis(const bool val);
+	void SetMouseSensitivity(const double val);
+
 protected slots:
 	void update();
 
@@ -37,6 +40,9 @@ private:
 
 	Camera m_camera;
 	GLuint u_modelToWorld, u_worldToCamera, u_cameraToView;
+
+	int_fast8_t m_axisInversion;
+	double m_rotationSpeed;
 
 	QOpenGLVertexArrayObject m_vao;
 	QOpenGLBuffer m_vbo;

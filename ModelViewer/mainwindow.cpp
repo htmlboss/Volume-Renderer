@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 	ui->snapshotPushButton->setEnabled(false);
 
-	setWindowTitle("Viewer");
+	setWindowTitle("APFSDS-T");
 
 	QFile f(":qdarkstyle/style.qss");
 	if (!f.exists()) {
@@ -61,4 +61,19 @@ void MainWindow::on_screenshotFolder_textChanged(const QString& arg1) {
 		return;
 	}
 	ui->snapshotPushButton->setEnabled(true);
+}
+
+/***********************************************************************************/
+void MainWindow::on_invertAxisCheckBox_clicked() {
+	ui->openGLWidget->SetInvertedAxis(ui->invertAxisCheckBox->isChecked());
+}
+
+/***********************************************************************************/
+void MainWindow::on_rotSensitivirySpinBox_editingFinished() {
+	ui->openGLWidget->SetMouseSensitivity(ui->rotSensitivirySpinBox->value());
+}
+
+/***********************************************************************************/
+void MainWindow::on_rotSensitivirySpinBox_valueChanged(double arg1) {
+	ui->openGLWidget->SetMouseSensitivity(arg1);
 }
