@@ -2,5 +2,9 @@
     <qresource prefix="/">
         <file>shaders/basic.frag</file>
         <file>shaders/basic.vert</file>
+        <file>shaders/backface.frag</file>
+        <file>shaders/backface.vert</file>
+        <file>shaders/raycast.frag</file>
+        <file>shaders/raycast.vert</file>
     </qresource>
 </RCC>

@@ -14,8 +14,7 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     input.cpp \
     camera.cpp \
-    mainwindow.cpp \
-    volumerenderer.cpp
+    mainwindow.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -35,8 +34,7 @@ HEADERS += \
     mainwindow.h \
     input.h \
     camera.h \
-    mainwindow.h \
-    volumerenderer.h
+    mainwindow.h
 
 RESOURCES += \
     qdarkstyle/style.qrc \
@@ -45,7 +43,11 @@ RESOURCES += \
 
 DISTFILES += \
     shaders/basic.vert \
-    shaders/basic.frag
+    shaders/basic.frag \
+    shaders/backface.vert \
+    shaders/backface.frag \
+    shaders/raycast.vert \
+    shaders/raycast.frag
 
 FORMS += \
     mainwindow.ui

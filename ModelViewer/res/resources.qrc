@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>icon.png</file>
+        <file>Foot.vol</file>
+        <file>tff.dat</file>
     </qresource>
 </RCC>
